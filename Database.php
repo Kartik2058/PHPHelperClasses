@@ -156,4 +156,15 @@ class Database {
         $result->execute($params);
     }
     
+    public function delete($column_name=null,$value=null) {
+        if($column_name == null && $value == null) {
+            $column_name = $this->getPrimaryKeyName();
+            $value = $this->id;
+        }
+        $query = "DELETE FROM {$this->table_name} WHERE $column_name = ?";
+        $result = $this->query($query,1);
+        $result->execute([$value]);
+        return $value;
+    }
+    
 }
