@@ -26,4 +26,13 @@ class Database {
         }
     }
     
+    public function getPrimaryKeyName() {
+        $result = $this->query("SHOW KEYS FROM {$this->table_name} WHERE Key_name = 'PRIMARY'");
+        if ($result->rowCount() == 1) {
+            return $result->fetch(PDO::FETCH_ASSOC)["Column_name"];
+        } else {
+            return null;
+        }
+    }
+    
 }
