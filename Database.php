@@ -62,4 +62,36 @@ class Database {
         return $data;
     }
     
+    public static function find_by_where($where_statement=null, $where_params=null, $columns=null, $order_type=null, $order_column=null, $limit=null) {
+        $class = new static;
+        $sql = "";
+        if ($columns == null) {
+            $sql .= "SELECT * FROM {$class->table_name}";
+        } else {
+            $newColumns = [];
+            foreach ($columns as $column) {
+                if (in_array($column, $class->column_names)) {
+                    $newColumns[] = $column;
+                }
+            }
+            $sql .= "SELECT ".implode($newColumns,',')." FROM {$class->table_name}";
+        }
+        
+        if ($where_statement != null) {
+            $sql .= " WHERE " . $where_statement;
+        }
+        
+        if ($order_type != null && $order_column != null) {
+            $sql .= " ORDER BY " . $order_column . " " . $order_type;
+        }
+        
+        if ($limit != null) {
+            $sql .= " LIMIT " . $limit;
+        }
+        
+        $query = $class->query($sql, 1);
+        $query->execute($where_params);
+        return $query->fetchAll();
+    }
+    
 }
