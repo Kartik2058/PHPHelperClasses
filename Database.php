@@ -51,4 +51,15 @@ class Database {
         return $data;
     }
     
+    public static function find_by_id($id, $id_field=null) {
+        $class = new static;
+        if ($id_field == null) {
+            $id_field = $class->getPrimaryKeyName();
+        }
+        $query = $class->query("SELECT * FROM {$class->table_name} WHERE $id_field = $id LIMIT 1");
+        $query->setFetchMode(PDO::FETCH_CLASS,static::class);
+        $data = $query->fetch();
+        return $data;
+    }
+    
 }
