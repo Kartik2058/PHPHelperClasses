@@ -127,7 +127,7 @@ class Database {
     
     public function update($data) {
         $where_column_name = $this->getPrimaryKeyName();
-        $value = $this->id;
+        $value = $this->$where_column_name;
         $left_column_names = [];
         foreach($this->column_names as $column_name) {
             if(isset($data[$column_name])) {
@@ -159,7 +159,7 @@ class Database {
     public function delete($column_name=null,$value=null) {
         if($column_name == null && $value == null) {
             $column_name = $this->getPrimaryKeyName();
-            $value = $this->id;
+            $value = $this->$column_name;
         }
         $query = "DELETE FROM {$this->table_name} WHERE $column_name = ?";
         $result = $this->query($query,1);
