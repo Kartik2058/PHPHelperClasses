@@ -35,4 +35,12 @@ class Database {
         }
     }
     
+    public function query($sql, $options=null) {
+        if ($options == null) {
+            return $this->connection->query($sql);
+        } else if ($options == 1) {
+            return $this->connection->prepare($sql);
+        }
+    }
+    
 }
