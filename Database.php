@@ -11,6 +11,19 @@ class Database {
     
     public function __construct() {
         $this->connection = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME,DB_USER,DB_PASS);
+        $this->table_name = Inflect::pluralize(strtolower(static::class));
+        $this->column_names = $this->getColumnNames();
+    }
+    
+    public function getColumnNames(){
+        $result = $this->query("SHOW COLUMNS FROM {$this->table_name}");
+        if ($result->rowCount() > 0) {
+            $column_names = [];
+            while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+              $column_names[] = $row['Field'];
+            }
+            return $column_names;
+        }
     }
     
 }
