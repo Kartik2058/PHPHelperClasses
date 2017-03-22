@@ -94,4 +94,35 @@ class Database {
         return $query->fetchAll();
     }
     
+    public static function create($data) {
+        $class = new static;
+        $query = "INSERT INTO {$class->table_name} (";
+        $left_column_names = [];
+        foreach($class->column_names as $column_name) {
+            if(isset($data[$column_name])) {
+                $left_column_names[] = $column_name;
+            }
+        }
+        $column_names = implode(',', $left_column_names);
+        $query .= $column_names . ") VALUES (";
+        $i = 0;
+        $len = count($left_column_names);
+        $params = [];
+        foreach ($left_column_names as $column_name) {
+            $class->$column_name = $data[$column_name];
+            $params[] = $data[$column_name];
+            if ($i == $len - 1) {
+                $query .= "?";
+            } else {
+                $query .= "?,";
+            }
+            $i++;
+        }
+        $query .= ")";
+        $result = $class->query($query, 1);
+        $result->execute($params);
+        $class->id = $class->connection->lastInsertId();
+        return $class;
+    }
+    
 }
