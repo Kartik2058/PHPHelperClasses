@@ -5,6 +5,8 @@ define("DB_USER", "root");
 define("DB_PASS", "");
 define("DB_NAME", "test");
 
+require_once("Inflect.php");
+
 class Database {
     
     public function __construct() {
