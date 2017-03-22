@@ -43,4 +43,12 @@ class Database {
         }
     }
     
+    public static function find_all() {
+        $class = new static;
+        $query = $class->query("SELECT * FROM {$class->table_name}");
+        $query->setFetchMode(PDO::FETCH_CLASS,static::class);
+        $data = $query->fetchAll();
+        return $data;
+    }
+    
 }
