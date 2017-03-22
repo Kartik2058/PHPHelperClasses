@@ -125,4 +125,35 @@ class Database {
         return $class;
     }
     
+    public function update($data) {
+        $where_column_name = $this->getPrimaryKeyName();
+        $value = $this->id;
+        $left_column_names = [];
+        foreach($this->column_names as $column_name) {
+            if(isset($data[$column_name])) {
+                $left_column_names[] = $column_name;
+            }
+        }
+        $query = "UPDATE {$this->table_name} SET ";
+        $i = 0;
+        $len = count($left_column_names);
+        $params = [];
+        foreach ($left_column_names as $column_name) {
+            if(isset($data[$column_name])) {
+                $params[] = $data[$column_name];
+                $this->$column_name = $data[$column_name];
+                if ($i == $len - 1) {
+                    $query .= "$column_name = ?";
+                } else {
+                    $query .= "$column_name = ?,";
+                }
+            }
+            $i++;
+        }
+        $query .= " WHERE $where_column_name = ?";
+        $params[] =  $value;
+        $result = $this->query($query, 1);
+        $result->execute($params);
+    }
+    
 }
