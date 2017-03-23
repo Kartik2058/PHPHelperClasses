@@ -90,6 +90,7 @@ class Database {
         }
         
         $query = $class->query($sql, 1);
+        $query->setFetchMode(PDO::FETCH_CLASS,static::class);
         $query->execute($where_params);
         return $query->fetchAll();
     }
